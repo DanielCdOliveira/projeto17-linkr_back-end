@@ -12,11 +12,11 @@ app.use(json())
 app.use(router)
 
 const port = process.env.PORT
-app.listen(port,() => {console.log(`listening on port ${port}`)})
-
-
-
-
+app.listen(port, () => {
+    console.log(`|-----------------------------------|`)
+    console.log(`| Running at http://localhost:${port}  |`)
+    console.log(`|-----------------------------------|`)
+})
 
 
 
