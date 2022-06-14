@@ -1,15 +1,22 @@
 import postRepository from "../repositories/postRepository.js"
-import createHashtag from "../repositories/hashtagsRepository.js";
+import hashtagsRepository from "../repositories/hashtagsRepository.js"
 
 export async function publishPost(req,res){
         const { link, message } = req.body
         const { hashtags } = res.locals
         const user = 1
         try{
-                // validar o token
-                await postRepository.createPost(user, link, message)
-                await createHashtag(hashtags)
-                res.sendStatus(201)
+            // validar o token
+            await postRepository.createPost(user, link, message)
+            for(let hashtag of hashtags){
+                    let verification = await hashtagsRepository.verificateHashtag(hashtag)
+                    if(verification.rowCount > 0){
+                        await hashtagsRepository.updateHashtag(hashtag)
+                    } else {
+                        await hashtagsRepository.insertHashtag(hashtag)
+                    }
+            }
+            res.sendStatus(201)
         }catch(err){
                 res.send(err)
         }

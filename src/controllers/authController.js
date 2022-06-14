@@ -9,9 +9,9 @@ export async function signUp(req, res) {
     const passwordHash = bcrypt.hashSync(user.password, SALT);
     await connection.query(
       `
-    INSERT INTO users
-    (name,email,password,image)
-    VALUES ($1,$2,$3,$4)    
+      INSERT INTO users
+      (name,email,password,image)
+      VALUES ($1,$2,$3,$4)    
     `,
       [user.name, user.email, passwordHash,user.image]
     );
@@ -28,10 +28,10 @@ export async function signIn(req, res) {
     const user = (
       await connection.query(
         `
-    SELECT * FROM users
-    WHERE email = $1
-    `,
-        [req.body.email]
+        SELECT * FROM users
+        WHERE email = $1
+        `,
+      [req.body.email]
       )
     ).rows[0];
     if (!user) return res.sendStatus(401);
@@ -40,10 +40,10 @@ export async function signIn(req, res) {
       const token = uuid();
       await connection.query(
         `
-      INSERT INTO sessions
-      ("userId", token) VALUES ($1,$2)
-      `,
-        [user.id, token]
+        INSERT INTO sessions
+        ("userId", token) VALUES ($1,$2)
+        `,
+      [user.id, token]
       );
         
       return res.status(200).send({token});

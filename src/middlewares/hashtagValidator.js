@@ -1,4 +1,4 @@
-import hashtagSchema from "../schemas/hashtagSchema.js";
+import hashtagSchema from "../schemas/hashtagSchema.js"
 
 export default function hashtagValidator(req, res, next){
     const { message } = req.body;

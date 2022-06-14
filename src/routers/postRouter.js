@@ -1,9 +1,10 @@
-import { Router } from "express";
+import { Router } from "express"
 
 import { validateSchema } from "../middlewares/schemaValidator.js"
 import postSchema from "../schemas/postSchema.js"
 import hashtagValidator from "../middlewares/hashtagValidator.js"
-import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, getPosts } from "../controllers/postController.js";
+import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, getPosts } from "../controllers/postController.js"
+
 const postRouter = Router()
 
 postRouter.post("/publish/post", validateSchema(postSchema), hashtagValidator, publishPost);
