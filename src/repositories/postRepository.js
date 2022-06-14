@@ -46,13 +46,19 @@ async function editPost(userId, postId, newMessage) {
         [newMessage, userId, postId]);
 }
 
+async function getPosts(){
+  return connection.query(
+    `SELECT * FROM posts`
+  )
+}
 const postRepository = {
-        createPost,
-        likePost,
-        deslikePost,
-        countLikes,
-        deletePost,
-        editPost
+  createPost,
+  likePost,
+  deslikePost,
+  countLikes,
+  deletePost,
+  editPost,
+  getPosts,
 };
 
 export default postRepository
