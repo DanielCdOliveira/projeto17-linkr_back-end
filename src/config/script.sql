@@ -9,7 +9,7 @@ create table users(
 
 create table posts(
     "id" serial primary key,
-    "userId" integer not null references "user"("id"),
+    "userId" integer not null references "users"("id"),
     "message" text not null,
     "link" text not null,
     "createdAt" date not null default now()
@@ -17,7 +17,7 @@ create table posts(
 
 create table likes(
     "id" serial primary key,
-    "userId" integer not null references "user"("id"),
+    "userId" integer not null references "users"("id"),
     "postId" integer not null references "posts"("id"),
     "likeTime" date not null default now()
 )
