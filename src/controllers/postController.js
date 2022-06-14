@@ -17,7 +17,7 @@ export async function publishPost(req,res){
         }
 }
 
-export default async function likePost(req, res) {
+export async function likePost(req, res) {
     const { userId } = res.locals;
     const { postId } = req.body;
 
@@ -31,7 +31,7 @@ export default async function likePost(req, res) {
     }
 }
 
-export default async function deslikePost(req, res) {
+export async function deslikePost(req, res) {
     const { userId } = res.locals;
     const { postId } = req.body;
 
@@ -45,7 +45,7 @@ export default async function deslikePost(req, res) {
     }
 }
 
-export default async function countLikes(req, res) {
+export async function countLikes(req, res) {
     const { postId } = req.body;
 
     try {
@@ -58,7 +58,7 @@ export default async function countLikes(req, res) {
     }
 }
 
-export default async function deletePost(req, res) {
+export async function deletePost(req, res) {
     const { userId } = res.locals;
     const { postId } = req.body;
 
@@ -72,7 +72,7 @@ export default async function deletePost(req, res) {
     }
 }
 
-export default async function editPost(req, res) {
+export async function editPost(req, res) {
     const { userId } = res.locals;
     const { postId, newMessage } = req.body;
 
