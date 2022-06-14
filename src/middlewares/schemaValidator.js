@@ -1,12 +1,12 @@
 export function validateSchema(schema) {
+  console.log("schemaValidator")
   return (req, res, next) => {
-    const { error } = schema.validate(req.body, { abortEarly: false });
+    const { error } = schema.validate(req.body, { abortEarly: false })
     if (error) {
       return res
         .status(422)
-        .send(error.details.map((detail) => detail.message));
+        .send(error.details.map((detail) => detail.message))
     }
-
-    next();
-  };
+    next()
+  }
 }
