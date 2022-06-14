@@ -1,6 +1,5 @@
 import postRepository from "../repositories/postRepository.js"
 import createHashtag from "../repositories/hashtagsRepository.js";
-console.log("here")
 
 export async function publishPost(req,res){
         const { link, message } = req.body
@@ -9,7 +8,6 @@ export async function publishPost(req,res){
         try{
                 // validar o token
                 await postRepository.createPost(user, link, message)
-                console.log("controller")
                 await createHashtag(hashtags)
                 res.sendStatus(201)
         }catch(err){
@@ -84,4 +82,14 @@ export async function editPost(req, res) {
         console.log(e);
         return res.status(422).send("Não foi possível editar o post!")
     }
+}
+
+export async function getPosts(req,res){
+
+        try{
+                const result = await postRepository.getPosts()
+                res.send(result.rows)
+        }catch(err){
+                res.send(err)
+        }
 }

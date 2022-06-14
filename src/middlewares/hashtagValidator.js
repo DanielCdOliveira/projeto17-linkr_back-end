@@ -1,7 +1,6 @@
 import hashtagSchema from "../schemas/hashtagSchema.js";
 
 export default function hashtagValidator(req, res, next){
-    console.log("hashtagValidator")
     const { message } = req.body;
     let messageArray = message.split(" ")
     let hashtags = messageArray.filter((hashtag) => {
@@ -13,6 +12,5 @@ export default function hashtagValidator(req, res, next){
     if(hashtags.length > 0){
         res.locals.hashtags = hashtags
     }
-    console.log("next")
     next()
 }
