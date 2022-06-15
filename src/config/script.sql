@@ -36,3 +36,9 @@ create table hashtags(
     "name" text not null,
     "ranking" INTEGER NOT NULL DEFAULT 1
 );
+
+CREATE TABLE sessions(
+	"id" serial PRIMARY KEY,
+	"userId" integer NOT NULL REFERENCES "users"("id"),
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
+);
