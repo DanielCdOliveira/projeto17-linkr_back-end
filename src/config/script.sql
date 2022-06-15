@@ -11,9 +11,18 @@ create table posts(
     "id" serial primary key,
     "userId" integer not null references "users"("id"),
     "message" text not null,
-    "link" text not null,
+    "linkId" integer not null references "link"("id"),
     "createdAt" date not null default now()
 );
+
+create table link(
+    "id" serial primary key,
+    "title" text not null,
+    "description" text,
+    "image" text ,
+    "url" text not null unique
+);
+
 
 create table likes(
     "id" serial primary key,

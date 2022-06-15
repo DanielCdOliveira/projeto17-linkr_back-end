@@ -1,3 +1,5 @@
+import urlMetadata from "url-metadata";
+
 import postRepository from "../repositories/postRepository.js"
 import hashtagsRepository from "../repositories/hashtagsRepository.js"
 
@@ -5,9 +7,24 @@ export async function publishPost(req,res){
         const { link, message } = req.body
         const { hashtags } = res.locals
         const user = 1
+        
         try{
-            await postRepository.createPost(user, link, message)
-            if(hashtags !== undefined){
+                const {title, description, image, url} = await urlMetadata(`${link}`);
+                const metadatas = {
+                title,
+                description,
+                image,
+                url
+                };
+                const result = await postRepository.createLink(metadatas)
+
+                await postRepository.createPost(
+                  user,
+                  url,
+                  message,
+                  result
+                );
+                if(hashtags !== undefined){
                 for(let hashtag of hashtags){
                     let verification = await hashtagsRepository.verificateHashtag(hashtag)
                     if(verification.rowCount > 0){
@@ -17,7 +34,8 @@ export async function publishPost(req,res){
                     }
                 }
             }
-            res.sendStatus(201)
+                res.sendStatus(201)
+        
         }catch(err){
             res.send(err)
         }
