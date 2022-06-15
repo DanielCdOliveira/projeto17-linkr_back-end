@@ -19,7 +19,7 @@ export async function publishPost(req,res){
             }
             res.sendStatus(201)
         }catch(err){
-                res.send(err)
+            res.send(err)
         }
 }
 

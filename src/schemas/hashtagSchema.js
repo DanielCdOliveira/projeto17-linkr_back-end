@@ -5,6 +5,4 @@ const hashtagSchema = joi.object({
         .pattern(/^(?=.*[a-zA-Z])[0-9a-zA-Z$*&_/@#]{1,}$/)
 });
 
-console.log("schema #")
-
 export default hashtagSchema

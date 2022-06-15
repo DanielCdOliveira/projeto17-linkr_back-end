@@ -33,10 +33,24 @@ async function insertHashtag(hashtag) {
     `, [hashtag]) 
 }
 
+async function hashtagList() {
+    return connection.query(`
+        SELECT 
+            *
+        FROM 
+            hashtags
+        ORDER BY
+            ranking DESC
+        LIMIT 
+            10
+    `)
+}
+
 const hashtagsRepository = {
     verificateHashtag,
     updateHashtag,
-    insertHashtag
+    insertHashtag,
+    hashtagList
 }
 
 export default hashtagsRepository
