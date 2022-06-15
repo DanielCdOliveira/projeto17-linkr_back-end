@@ -7,12 +7,14 @@ import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, ge
 import tokenValidator from "../middlewares/tokenValidation.js";
 const postRouter = Router()
 
-postRouter.post("/publish/post", tokenValidator,validateSchema(postSchema), hashtagValidator, publishPost);
-postRouter.post("/like/post", likePost)
-postRouter.delete("/deslike/post", deslikePost)
+
+postRouter.post("/publish/post", tokenValidator, validateSchema(postSchema), hashtagValidator, publishPost);
+postRouter.post("/like/post/:id", tokenValidator, likePost);
+postRouter.delete("/deslike/post/:id",tokenValidator, deslikePost)
+
 postRouter.get("/coutlikes/post", countLikes)
-postRouter.delete("/delete/post", deletePost)
-postRouter.post("/edit/post", editPost)
+postRouter.delete("/delete/post",tokenValidator, deletePost)
+postRouter.post("/edit/post",tokenValidator, editPost)
 postRouter.get("/get/posts", getPosts)
 
 
