@@ -1,7 +1,6 @@
 import connection from "../config/db.js"
 
 async function verificateHashtag(hashtag) {
-    try{
     let verification = connection.query(`
         SELECT 
             * 
@@ -10,11 +9,9 @@ async function verificateHashtag(hashtag) {
         WHERE 
             "name" = ($1)
     `, [hashtag])
-    }
-    catch (err){
-        console.log(err)
-    }
+    return verification
 }
+
 
 async function updateHashtag(hashtag) {
     return connection.query(`
