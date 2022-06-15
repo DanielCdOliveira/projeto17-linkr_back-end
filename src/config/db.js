@@ -5,11 +5,6 @@ dotenv.config();
 
 const { Pool } = pg;
 
-// const db = {
-//   	user: "postgres",
-// 	password: process.env.PASSWORD,
-// 	database: "linkr"
-// }
 
 const connection = new Pool({
   connectionString: process.env.DATABASE_URL
