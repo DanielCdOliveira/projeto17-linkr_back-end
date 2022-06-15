@@ -5,16 +5,24 @@ dotenv.config();
 
 const { Pool } = pg;
 
+// const connection = new Pool({
+//   connectionString: process.env.DATABASE_URL
+// });
 
-const connection = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+// if (process.env.MODE === "PROD") {
+//   connection.ssl = {
+//     rejectUnauthorized: false,
+//   };
+// }
 
-if (process.env.MODE === "PROD") {
-  connection.ssl = {
-    rejectUnauthorized: false,
-  };
+const db = {
+  user: "postgres",
+	password: process.env.PASSWORD,
+	database: "linkr"
 }
+
+const connection = new Pool(db)
+
 
 console.log("connected");
 export default connection;
