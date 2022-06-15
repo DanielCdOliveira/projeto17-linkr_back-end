@@ -83,7 +83,9 @@ async function editPost(userId, postId, newMessage) {
 
 async function getPosts(){
   return connection.query(
-    `SELECT * FROM posts`
+    `SELECT * FROM posts
+    join link
+      on posts."linkId" = posts.id`
   )
 }
 const postRepository = {
