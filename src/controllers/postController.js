@@ -5,7 +5,7 @@ import hashtagsRepository from "../repositories/hashtagsRepository.js"
 
 export async function publishPost(req,res){
         const { link, message } = req.body
-        const { hashtags } = res.locals
+        const { hashtags, userId } = res.locals
         
         try{
                 const {title, description, image, url} = await urlMetadata(`${link}`);
@@ -17,12 +17,7 @@ export async function publishPost(req,res){
                 };
                 const result = await postRepository.createLink(metadatas)
 
-                await postRepository.createPost(
-                  user,
-                  url,
-                  message,
-                  result
-                );
+                await postRepository.createPost(userId, url, message, result);
                 if(hashtags !== undefined){
                 for(let hashtag of hashtags){
                     let verification = await hashtagsRepository.verificateHashtag(hashtag)
