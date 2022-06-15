@@ -7,8 +7,8 @@ import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, ge
 const postRouter = Router()
 
 postRouter.post("/publish/post", validateSchema(postSchema), hashtagValidator, publishPost);
-postRouter.post("/like/post", likePost)
-postRouter.delete("/deslike/post", deslikePost)
+postRouter.post("/like/post/:id", likePost);
+postRouter.delete("/deslike/post/:id", deslikePost)
 postRouter.get("/coutlikes/post", countLikes)
 postRouter.delete("/delete/post", deletePost)
 postRouter.post("/edit/post", editPost)

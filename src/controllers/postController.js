@@ -43,10 +43,10 @@ export async function publishPost(req,res){
 
 export async function likePost(req, res) {
     const { userId } = res.locals;
-    const { postId } = req.body;
+    const { id } = req.params;
 
     try {
-        await likesRepository.likePost(userId, postId);
+        await likesRepository.likePost(userId, id);
         return res.status(200).send("Curtiu a publicação!");
     
     } catch (e) {
@@ -57,10 +57,10 @@ export async function likePost(req, res) {
 
 export async function deslikePost(req, res) {
     const { userId } = res.locals;
-    const { postId } = req.body;
+    const { id } = req.params;
 
     try {
-        await likesRepository.deslikePost(userId, postId);
+        await likesRepository.deslikePost(userId, id);
         return res.status(200).send("Descurtiu a publicação!");
     
     } catch (e) {
