@@ -1,6 +1,6 @@
 export function validateSchema(schema) {
-  console.log("schemaValidator")
   return (req, res, next) => {
+    console.log("middleware")
     const { error } = schema.validate(req.body, { abortEarly: false })
     if (error) {
       return res

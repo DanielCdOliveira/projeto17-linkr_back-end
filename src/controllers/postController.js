@@ -7,13 +7,15 @@ export async function publishPost(req,res){
         const user = 1
         try{
             await postRepository.createPost(user, link, message)
-            for(let hashtag of hashtags){
+            if(hashtags !== undefined){
+                for(let hashtag of hashtags){
                     let verification = await hashtagsRepository.verificateHashtag(hashtag)
                     if(verification.rowCount > 0){
                         await hashtagsRepository.updateHashtag(hashtag)
                     } else {
                         await hashtagsRepository.insertHashtag(hashtag)
                     }
+                }
             }
             res.sendStatus(201)
         }catch(err){

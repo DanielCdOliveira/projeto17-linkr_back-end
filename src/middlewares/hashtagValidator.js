@@ -12,5 +12,6 @@ export default function hashtagValidator(req, res, next){
     if(hashtags.length > 0){
         res.locals.hashtags = hashtags
     }
+    console.log("next")
     next()
 }
