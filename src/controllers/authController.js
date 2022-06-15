@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
 import connection from "../config/db.js";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+dotenv.config();
 
 export async function signUp(req, res) {
   const user = req.body;
@@ -13,9 +15,8 @@ export async function signUp(req, res) {
     (name,email,password,image)
     VALUES ($1,$2,$3,$4)    
     `,
-      [user.name, user.email, passwordHash,user.image]
+      [user.name, user.email, passwordHash, user.image]
     );
-
     return res.sendStatus(201);
   } catch (error) {
     if (error.code === "23505") return res.status(409).send(error.detail);
@@ -37,18 +38,24 @@ export async function signIn(req, res) {
     if (!user) return res.sendStatus(401);
 
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
-      const token = uuid();
-      await connection.query(
-        `
+      const key = process.env.JWT_SECRET;
+      const expiresAt = { expiresIn: 60 * 60 * 24 };
+
+      const sessionId = (
+        await connection.query(
+          `
       INSERT INTO sessions
-      ("userId", token) VALUES ($1,$2)
+      ("userId") 
+      VALUES ($1)
+      RETURNING id
       `,
-        [user.id, token]
-      );
-        
-      return res.status(200).send({token, image: user.image});
+          [user.id]
+        )
+      ).rows[0].id;
+      const token = jwt.sign({ sessionId }, key, expiresAt);
+      return res.status(200).send({ token, image: user.image, name:user.name });
     }
-    return res.sendStatus(401)
+    return res.sendStatus(401);
   } catch (error) {
     return res.sendStatus(500);
   }
