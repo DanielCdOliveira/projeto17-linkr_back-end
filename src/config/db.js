@@ -9,7 +9,7 @@ const connection = new Pool({
 
 if (process.env.MODE === "PROD") {
   connection.ssl = {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false
   };
 }
 
