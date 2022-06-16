@@ -66,19 +66,26 @@ async function countLikes(postId) {
         [postId])
 }
 
-async function deletePost(userId, postId) {
+async function deletePost(userId, id) {
+  console.log(userId, id)
     return connection.query(`
         DELETE from posts
-        WHERE "userId" = $1 AND "postId" = $2`,
-        [userId, postId]);
+        WHERE "userId" = $1 AND "id" = $2`,
+        [userId, id]);
 }
 
-async function editPost(userId, postId, newMessage) {
+async function editPost(userId, postId, message) {
     return connection.query(`
         update posts
         set message = $1
-        WHERE "userId" = $2 AND "postId" = $3`,
-        [newMessage, userId, postId]);
+        WHERE "userId" = $2 AND id = $3`,
+        [message, userId, postId]);
+}
+
+async function getEditedPost(postId) {
+  return connection.query(`
+  SELECT * FROM posts
+  WHERE id = $1`, [postId]);
 }
 
 async function getPosts(){
@@ -111,6 +118,7 @@ const postRepository = {
   countLikes,
   deletePost,
   editPost,
+  getEditedPost,
   getPosts,
   createLink,
   getPostsByParams
