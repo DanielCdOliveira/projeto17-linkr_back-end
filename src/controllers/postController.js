@@ -6,7 +6,6 @@ import hashtagsRepository from "../repositories/hashtagsRepository.js"
 export async function publishPost(req,res){
         const { link, message } = req.body
         const { hashtags, userId } = res.locals
-        
         try{
                 const {title, description, image, url} = await urlMetadata(`${link}`);
                 const metadatas = {

@@ -85,7 +85,7 @@ async function getPosts(){
   return connection.query(
     `SELECT * FROM posts
     join link
-      on posts."linkId" = posts.id`
+      on posts."linkId" = link.id`
   )
 }
 
