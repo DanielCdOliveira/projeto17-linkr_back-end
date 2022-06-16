@@ -104,9 +104,9 @@ export async function editPost(req, res) {
 }
 
 export async function getPosts(req,res){
-
+    const { limit, offset } = req.query;
         try{
-                const result = await postRepository.getPosts()
+                const result = await postRepository.getPosts(limit, offset)
                 res.send(result.rows)
         }catch(err){
                 res.send(err)
