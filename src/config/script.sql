@@ -34,7 +34,8 @@ create table likes(
 create table hashtags(
     "id" serial primary key,
     "name" text not null,
-    "ranking" INTEGER NOT NULL DEFAULT 1
+    "ranking" integer not null default 1,
+    "createdAt" date not null default now()
 );
 
 CREATE TABLE sessions(

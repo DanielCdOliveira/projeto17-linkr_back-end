@@ -88,6 +88,22 @@ async function getPosts(){
       on posts."linkId" = posts.id`
   )
 }
+
+async function getPostsByParams(hashtag) {
+  return connection.query(`
+    SELECT 
+      * 
+    FROM
+      posts 
+    WHERE 
+      message
+    ILIKE 
+      ($1)
+    ORDER BY 
+      id DESC
+  `,[`%#${hashtag}%`])
+}
+
 const postRepository = {
   createPost,
   likePost,
@@ -96,7 +112,8 @@ const postRepository = {
   deletePost,
   editPost,
   getPosts,
-  createLink
+  createLink,
+  getPostsByParams
 };
 
 export default postRepository
