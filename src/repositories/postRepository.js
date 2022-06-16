@@ -82,12 +82,20 @@ async function editPost(userId, postId, newMessage) {
         [newMessage, userId, postId]);
 }
 
-async function getPosts(){
+async function getPosts(limit, offset){
+
+  const offsetClause = offset ? `OFFSET ${offset}` : "";
+  const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
+  
   return connection.query(
-    `SELECT * FROM posts
+    `SELECT posts.id as postId,posts.message, posts."userId", link.* FROM posts
     join link
-      on posts."linkId" = link.id`
-  )
+      on posts."linkId" = link.id
+      order by posts.id desc
+      ${offsetClause}
+      ${limitClause}
+    `
+  );
 }
 
 async function getPostsByParams(hashtag) {
