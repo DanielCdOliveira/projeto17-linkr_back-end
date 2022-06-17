@@ -16,7 +16,12 @@ export async function publishPost(req,res){
                 };
                 const result = await postRepository.createLink(metadatas)
 
+
                 await postRepository.createPost(userId, url, message, result);
+
+
+
+
                 if(hashtags !== undefined){
                 for(let hashtag of hashtags){
                     let verification = await hashtagsRepository.verificateHashtag(hashtag)

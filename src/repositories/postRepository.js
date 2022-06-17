@@ -6,6 +6,7 @@ async function createLink(link) {
   const result = await connection.query(`SELECT * FROM link where url = $1`, [
     url,
   ]);
+  console.log(result.rows)
   if (result.rowCount > 0) {
     return result.rows[0].id;
   }
@@ -17,7 +18,7 @@ async function createLink(link) {
 }
 
 async function createPost(user, link, message,resultLink) {
-  if(resultLink){
+  if(typeof(resultLink) === "number" ){
     return connection.query(
       `INSERT INTO posts("userId","message","linkId") values($1, $2, $3)`,
       [user, message, resultLink]
