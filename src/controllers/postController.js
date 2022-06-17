@@ -67,12 +67,28 @@ export async function deslikePost(req, res) {
     }
 }
 
+export async function getLikes(req, res) {
+    try {
+        const likes = await postRepository.getLikes();
+        return res.status(200).send(likes.rows);
+    
+    } catch (e) {
+        console.log(e);
+        return res.status(422).send("Não foi possível fazer o get dos likes!")
+    }
+}
+
 export async function countLikes(req, res) {
-    const { postId } = req.body;
+    const { id } = req.params;
 
     try {
-        const likesInfo = await postRepository.countLikes(postId);
-        return res.status(200).send(likesInfo);
+        const likesInfo = await postRepository.countLikes(id);
+
+        if(likesInfo.rows.length == 0){
+            return res.status(200).send(`${likesInfo.rows.length}`);
+        } else {
+            return res.status(200).send(likesInfo.rows[0].count);
+        }
     
     } catch (e) {
         console.log(e);
@@ -83,8 +99,6 @@ export async function countLikes(req, res) {
 export async function deletePost(req, res) {
     const { userId } = res.locals;
     const { id } = req.params;
-
-    console.log(userId, id)
 
     try {
         await postRepository.deletePost(userId, id);
@@ -100,12 +114,9 @@ export async function editPost(req, res) {
     const { userId } = res.locals;
     const { postId, message } = req.body;
 
-    console.log("aaaaaa", postId, message, userId)
-
     try {
         await postRepository.editPost(userId, postId, message);
         const postEdited = await postRepository.getEditedPost(postId);
-        console.log(postEdited.rows)
         return res.status(200).send(postEdited.rows[0].message);
     
     } catch (e) {
