@@ -52,7 +52,7 @@ export async function signIn(req, res) {
           [user.id]
         )
       ).rows[0].id;
-      const token = jwt.sign({ sessionId }, key, expiresAt);
+      const token = jwt.sign({ sessionId, userId:user.id }, key, expiresAt);
       return res.status(200).send({ token, image: user.image, name:user.name });
     }
     return res.sendStatus(401);
