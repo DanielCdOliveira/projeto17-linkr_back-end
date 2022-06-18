@@ -78,6 +78,19 @@ export async function getLikes(req, res) {
     }
 }
 
+export async function getLikesById(req, res) {
+    const { id } = req.params;
+
+    try {
+        const likes = await postRepository.getLikesById(id);
+        return res.status(200).send(likes.rows);
+    
+    } catch (e) {
+        console.log(e);
+        return res.status(422).send("Não foi possível fazer o get dos likes!")
+    }
+}
+
 export async function countLikes(req, res) {
     const { id } = req.params;
 
@@ -101,6 +114,7 @@ export async function deletePost(req, res) {
     const { id } = req.params;
 
     try {
+        await postRepository.deleteLikes(id);
         await postRepository.deletePost(userId, id);
         return res.sendStatus(204);
     

@@ -58,12 +58,21 @@ async function deslikePost(userId, id) {
         [userId, id]);
 }
 
-async function getLikes(userId, id) {
+async function getLikes() {
     return connection.query(`
       SELECT likes.id, likes."postId", users.name, likes."userId"
       FROM likes
       JOIN users ON users.id = likes."userId"
     `);
+}
+
+async function getLikesById(id) {
+  return connection.query(`
+    SELECT likes.id, likes."postId", users.name, likes."userId"
+    FROM likes
+    JOIN users ON users.id = likes."userId"
+    WHERE likes."postId" = $1`, [id]
+  );
 }
 
 async function countLikes(id) {
@@ -79,6 +88,13 @@ async function deletePost(userId, id) {
         DELETE from posts
         WHERE "userId" = $1 AND "id" = $2`,
         [userId, id]);
+}
+
+async function deleteLikes(id) {
+  return connection.query(
+   `DELETE FROM likes
+    WHERE likes."postId" = $1`
+  , [id]);
 }
 
 async function editPost(userId, postId, message) {
@@ -137,7 +153,9 @@ const postRepository = {
   getEditedPost,
   getPosts,
   createLink,
-  getPostsByParams
+  getPostsByParams,
+  deleteLikes,
+  getLikesById
 };
 
 export default postRepository
