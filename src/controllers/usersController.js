@@ -1,8 +1,7 @@
 import connection from "../config/db.js";
 
 export async function getUsers(req,res){
-    let filter = req.body.name;
-    filter = filter ? filter + "%" : "%";
+    const name = req.params.name
 
     try{
         const users = await connection.query(
@@ -11,7 +10,7 @@ export async function getUsers(req,res){
             FROM users
             WHERE users.name ILIKE $1
             `,
-            [`${filter}%`]
+            [name + "%"]
         );
 
         res.status(200).send(users.rows);
