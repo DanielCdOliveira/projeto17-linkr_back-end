@@ -115,7 +115,8 @@ async function getPosts(limit, offset, userId){
 
   const offsetClause = offset ? `OFFSET ${offset}` : "";
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
-  const userIdClause = userId ? `WHERE post."userId" = ${userId}` : ``;
+  const userIdClause = userId ? `WHERE posts."userId" = ${userId}` : ``;
+
   
   return connection.query(
     `SELECT posts.id as postId,posts.message, posts."userId", link.* FROM posts
