@@ -132,13 +132,17 @@ async function getPosts(limit, offset){
 async function getPostsByParams(hashtag) {
   return connection.query(`
     SELECT 
-      * 
+      posts.id as postId,posts.message, posts."userId", link.*,  users.name as "userName", users.image as "userImage" 
     FROM
       posts
     JOIN 
       link
     ON
       posts."linkId" = link.id
+    JOIN 
+      users 
+    ON 
+      posts."userId" = users.id
     WHERE 
       message
     ILIKE 
