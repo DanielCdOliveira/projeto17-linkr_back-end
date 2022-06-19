@@ -1,7 +1,9 @@
 import connection from "../config/db.js";
 
 export async function getUsers(req,res){
-    const name = req.params.name
+    const {name, id} = req.query
+
+    const nameClause = name? 
 
     try{
         const users = await connection.query(
@@ -21,3 +23,4 @@ export async function getUsers(req,res){
         res.status(500).send("Erro no servidor");
     }
 }
+
