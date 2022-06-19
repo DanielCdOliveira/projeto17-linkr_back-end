@@ -117,16 +117,14 @@ async function getPosts(limit, offset){
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
   
   return connection.query(
-    `SELECT
-      posts.id as postId,posts.message, posts."userId", link.* FROM posts
-    JOIN
-     link
-    ON
-     posts."linkId" = link.id
-    ORDER BY
-     posts.id desc
-    ${offsetClause}
-    ${limitClause}
+    `SELECT posts.id as postId,posts.message, posts."userId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
+    join link
+      on posts."linkId" = link.id
+    join users 
+      on posts."userId" = users.id
+      order by posts.id desc
+      ${offsetClause}
+      ${limitClause}
     `
   );
 }
