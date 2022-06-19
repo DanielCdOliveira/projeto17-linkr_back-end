@@ -18,6 +18,4 @@ postRouter.delete("/delete/post/:id",tokenValidator, deletePost)
 postRouter.post("/edit/post",tokenValidator, editPost)
 postRouter.get("/get/posts", getPosts)
 
-
-
 export default postRouter;

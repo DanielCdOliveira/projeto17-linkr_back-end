@@ -119,10 +119,12 @@ async function getPosts(limit, offset, userId){
 
   
   return connection.query(
-    `SELECT posts.id as postId,posts.message, posts."userId", link.* FROM posts
+    `SELECT posts.id as postId,posts.message, posts."userId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
     join link
       on posts."linkId" = link.id
-      ${userIdClause}
+    join users 
+    ${userIdClause}
+      on posts."userId" = users.id
       order by posts.id desc
       ${offsetClause}
       ${limitClause}
@@ -133,13 +135,17 @@ async function getPosts(limit, offset, userId){
 async function getPostsByParams(hashtag) {
   return connection.query(`
     SELECT 
-      * 
+      posts.id as postId,posts.message, posts."userId", link.*,  users.name as "userName", users.image as "userImage" 
     FROM
       posts
     JOIN 
       link
     ON
       posts."linkId" = link.id
+    JOIN 
+      users 
+    ON 
+      posts."userId" = users.id
     WHERE 
       message
     ILIKE 
@@ -147,6 +153,53 @@ async function getPostsByParams(hashtag) {
     ORDER BY 
       posts."id" DESC
   `,[`%#${hashtag}%`])
+}
+
+async function getPostsById(id) {
+  return (await connection.query(`
+    SELECT 
+      * 
+    FROM 
+      posts 
+    WHERE 
+      id = ($1)
+  `,[id])).rows
+}
+
+async function deleteHashtag(hashtags) {
+  let answer 
+  for(let hashtag of hashtags){
+    console.log(hashtag)
+    let count = await connection.query(`
+      SELECT 
+        *
+      FROM 
+        hashtags
+      WHERE
+        name = ($1)
+    `,[hashtag])
+    let countInfos = count.rows
+    if(countInfos.ranking > 1){
+      console.log("maior q 1")
+      answer = await connection.query(`
+        UPDATE 
+            hashtags
+        SET 
+            ranking = (ranking - 1)
+        WHERE 
+            name = ($1)
+      `, [hashtag])
+    } else {
+      console.log('menor que 1')
+      answer = await connection.query(`
+        DELETE FROM
+            hashtags
+        WHERE 
+            name = ($1)
+      `, [hashtag])
+    }
+  }
+  return answer
 }
 
 const postRepository = {
@@ -162,7 +215,9 @@ const postRepository = {
   createLink,
   getPostsByParams,
   deleteLikes,
-  getLikesById
+  getLikesById,
+  getPostsById,
+  deleteHashtag
 };
 
 export default postRepository
