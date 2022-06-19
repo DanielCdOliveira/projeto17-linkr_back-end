@@ -89,15 +89,17 @@ async function getEditedPost(postId) {
   WHERE id = $1`, [postId]);
 }
 
-async function getPosts(limit, offset){
+async function getPosts(limit, offset, userId){
 
   const offsetClause = offset ? `OFFSET ${offset}` : "";
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
+  const userIdClause = userId ? `WHERE post."userId" = ${userId}` : ``;
   
   return connection.query(
     `SELECT posts.id as postId,posts.message, posts."userId", link.* FROM posts
     join link
       on posts."linkId" = link.id
+      ${userIdClause}
       order by posts.id desc
       ${offsetClause}
       ${limitClause}
