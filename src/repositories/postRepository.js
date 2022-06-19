@@ -123,8 +123,8 @@ async function getPosts(limit, offset, userId){
     join link
       on posts."linkId" = link.id
     join users 
-    ${userIdClause}
       on posts."userId" = users.id
+      ${userIdClause}
       order by posts.id desc
       ${offsetClause}
       ${limitClause}
