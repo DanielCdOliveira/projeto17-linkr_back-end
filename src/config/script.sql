@@ -1,3 +1,11 @@
+create table link(
+    "id" serial primary key,
+    "title" text not null,
+    "description" text,
+    "image" text ,
+    "url" text not null unique
+);
+
 create table users(
     "id" serial primary key,
     "email" text not null unique,
@@ -14,15 +22,6 @@ create table posts(
     "linkId" integer not null references "link"("id"),
     "createdAt" date not null default now()
 );
-
-create table link(
-    "id" serial primary key,
-    "title" text not null,
-    "description" text,
-    "image" text ,
-    "url" text not null unique
-);
-
 
 create table likes(
     "id" serial primary key,
