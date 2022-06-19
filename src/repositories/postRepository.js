@@ -132,13 +132,17 @@ async function getPostsByParams(hashtag) {
     SELECT 
       * 
     FROM
-      posts 
+      posts
+    JOIN 
+      link
+    ON
+      posts."linkId" = link.id
     WHERE 
       message
     ILIKE 
       ($1)
     ORDER BY 
-      id DESC
+      posts."id" DESC
   `,[`%#${hashtag}%`])
 }
 
