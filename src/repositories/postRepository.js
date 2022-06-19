@@ -117,12 +117,16 @@ async function getPosts(limit, offset){
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
   
   return connection.query(
-    `SELECT posts.id as postId,posts.message, posts."userId", link.* FROM posts
-    join link
-      on posts."linkId" = link.id
-      order by posts.id desc
-      ${offsetClause}
-      ${limitClause}
+    `SELECT
+      posts.id as postId,posts.message, posts."userId", link.* FROM posts
+    JOIN
+     link
+    ON
+     posts."linkId" = link.id
+    ORDER BY
+     posts.id desc
+    ${offsetClause}
+    ${limitClause}
     `
   );
 }
@@ -146,6 +150,53 @@ async function getPostsByParams(hashtag) {
   `,[`%#${hashtag}%`])
 }
 
+async function getPostsById(id) {
+  return (await connection.query(`
+    SELECT 
+      * 
+    FROM 
+      posts 
+    WHERE 
+      id = ($1)
+  `,[id])).rows
+}
+
+async function deleteHashtag(hashtags) {
+  let answer 
+  for(let hashtag of hashtags){
+    console.log(hashtag)
+    let count = await connection.query(`
+      SELECT 
+        *
+      FROM 
+        hashtags
+      WHERE
+        name = ($1)
+    `,[hashtag])
+    let countInfos = count.rows
+    if(countInfos.ranking > 1){
+      console.log("maior q 1")
+      answer = await connection.query(`
+        UPDATE 
+            hashtags
+        SET 
+            ranking = (ranking - 1)
+        WHERE 
+            name = ($1)
+      `, [hashtag])
+    } else {
+      console.log('menor que 1')
+      answer = await connection.query(`
+        DELETE FROM
+            hashtags
+        WHERE 
+            name = ($1)
+      `, [hashtag])
+    }
+  }
+  return answer
+}
+
 const postRepository = {
   createPost,
   likePost,
@@ -159,7 +210,9 @@ const postRepository = {
   createLink,
   getPostsByParams,
   deleteLikes,
-  getLikesById
+  getLikesById,
+  getPostsById,
+  deleteHashtag
 };
 
 export default postRepository
