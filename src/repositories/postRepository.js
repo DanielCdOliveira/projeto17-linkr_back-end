@@ -44,35 +44,57 @@ async function createPost(user, link, message,resultLink) {
     );
 }
 
-async function likePost(userId, postId) {
+async function likePost(userId, id) {
     return connection.query(`
         INSERT INTO likes ("userId", "postId")
         VALUES ($1, $2)`,
-        [userId, postId]);
+        [userId, id]);
 }
 
-async function deslikePost(userId, postId) {
+async function deslikePost(userId, id) {
     return connection.query(`
         DELETE from likes
         WHERE "userId" = $1 AND "postId" = $2`,
-        [userId, postId]);
+        [userId, id]);
 }
 
-async function countLikes(postId) {
+async function getLikes() {
     return connection.query(`
-        SELECT COUNT(likes."postId"), users.name
+      SELECT likes.id, likes."postId", users.name, likes."userId"
+      FROM likes
+      JOIN users ON users.id = likes."userId"
+    `);
+}
+
+async function getLikesById(id) {
+  return connection.query(`
+    SELECT likes.id, likes."postId", users.name, likes."userId"
+    FROM likes
+    JOIN users ON users.id = likes."userId"
+    WHERE likes."postId" = $1`, [id]
+  );
+}
+
+async function countLikes(id) {
+    return connection.query(`
+        SELECT COUNT(likes."postId")
         FROM likes
-        JOIN users ON users.id = likes."userId"
         WHERE likes."postId" = $1`,
-        [postId])
+        [id])
 }
 
 async function deletePost(userId, id) {
-  console.log(userId, id)
     return connection.query(`
         DELETE from posts
         WHERE "userId" = $1 AND "id" = $2`,
         [userId, id]);
+}
+
+async function deleteLikes(id) {
+  return connection.query(
+   `DELETE FROM likes
+    WHERE likes."postId" = $1`
+  , [id]);
 }
 
 async function editPost(userId, postId, message) {
@@ -112,13 +134,17 @@ async function getPostsByParams(hashtag) {
     SELECT 
       * 
     FROM
-      posts 
+      posts
+    JOIN 
+      link
+    ON
+      posts."linkId" = link.id
     WHERE 
       message
     ILIKE 
       ($1)
     ORDER BY 
-      id DESC
+      posts."id" DESC
   `,[`%#${hashtag}%`])
 }
 
@@ -126,13 +152,16 @@ const postRepository = {
   createPost,
   likePost,
   deslikePost,
+  getLikes,
   countLikes,
   deletePost,
   editPost,
   getEditedPost,
   getPosts,
   createLink,
-  getPostsByParams
+  getPostsByParams,
+  deleteLikes,
+  getLikesById
 };
 
 export default postRepository
