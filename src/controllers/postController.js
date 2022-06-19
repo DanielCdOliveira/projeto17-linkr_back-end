@@ -15,13 +15,7 @@ export async function publishPost(req,res){
                 url
                 };
                 const result = await postRepository.createLink(metadatas)
-
-
                 await postRepository.createPost(userId, url, message, result);
-
-
-
-
                 if(hashtags !== undefined){
                 for(let hashtag of hashtags){
                     let verification = await hashtagsRepository.verificateHashtag(hashtag)
@@ -117,7 +111,6 @@ export async function deletePost(req, res) {
         await postRepository.deleteLikes(id);
         await postRepository.deletePost(userId, id);
         return res.sendStatus(204);
-    
     } catch (e) {
         console.log(e);
         return res.status(422).send("Não foi possível deletar o post!")
