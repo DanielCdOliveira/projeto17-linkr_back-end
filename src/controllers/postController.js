@@ -39,11 +39,11 @@ export async function likePost(req, res) {
 
     try {
         await postRepository.likePost(userId, id);
-        return res.status(200).send("Curtiu a publicação!");
+        return res.status(200).send("Liked the post!");
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível curtir a publicação!")
+        return res.status(422).send("Unable to like the post!")
     }
 }
 
@@ -53,11 +53,11 @@ export async function deslikePost(req, res) {
 
     try {
         await postRepository.deslikePost(userId, id);
-        return res.status(200).send("Descurtiu a publicação!");
+        return res.status(200).send("Dislike the post!");
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível descurtir a publicação!")
+        return res.status(422).send("Unable to dislike the post!")
     }
 }
 
@@ -68,7 +68,7 @@ export async function getLikes(req, res) {
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível fazer o get dos likes!")
+        return res.status(422).send("Unable to get likes!")
     }
 }
 
@@ -81,7 +81,7 @@ export async function getLikesById(req, res) {
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível fazer o get dos likes!")
+        return res.status(422).send("Unable to get likes!")
     }
 }
 
@@ -99,7 +99,7 @@ export async function countLikes(req, res) {
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível mostrar a quantidade de likes!")
+        return res.status(422).send("Unable to get likes count!")
     }
 }
 
@@ -113,7 +113,7 @@ export async function deletePost(req, res) {
         return res.sendStatus(204);
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível deletar o post!")
+        return res.status(422).send("Unable to delete the post!")
     }
 }
 
@@ -128,7 +128,7 @@ export async function editPost(req, res) {
     
     } catch (e) {
         console.log(e);
-        return res.status(422).send("Não foi possível editar o post!")
+        return res.status(422).send("Unable to edit the post!")
     }
 }
 
