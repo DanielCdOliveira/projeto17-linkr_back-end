@@ -6,7 +6,6 @@ async function createLink(link) {
   const result = await connection.query(`SELECT * FROM link where url = $1`, [
     url,
   ]);
-  console.log(result.rows)
   if (result.rowCount > 0) {
     return result.rows[0].id;
   }
@@ -169,7 +168,6 @@ async function getPostsById(id) {
 async function deleteHashtag(hashtags) {
   let answer 
   for(let hashtag of hashtags){
-    console.log(hashtag)
     let count = await connection.query(`
       SELECT 
         *
@@ -180,7 +178,6 @@ async function deleteHashtag(hashtags) {
     `,[hashtag])
     let countInfos = count.rows
     if(countInfos.ranking > 1){
-      console.log("maior q 1")
       answer = await connection.query(`
         UPDATE 
             hashtags
@@ -190,7 +187,6 @@ async function deleteHashtag(hashtags) {
             name = ($1)
       `, [hashtag])
     } else {
-      console.log('menor que 1')
       answer = await connection.query(`
         DELETE FROM
             hashtags

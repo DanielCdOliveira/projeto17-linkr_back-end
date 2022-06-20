@@ -7,7 +7,6 @@ export default async function tokenValidator(req, res, next) {
   const key = process.env.JWT_SECRET;
   try {
     const data = jwt.verify(token, key);
-    console.log(data.sessionId);
     const {userId} = ( await connection.query(`
     SELECT "userId" 
     FROM sessions

@@ -17,7 +17,6 @@ export async function getPostsByHashtag(req, res) {
         let posts = await postRepository.getPostsByParams(hashtag)
         res.status(200).send(posts.rows) 
     } catch (err) {
-        console.log(err)
         res.status(500).send(err)
     }
 }

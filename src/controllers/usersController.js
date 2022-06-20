@@ -20,8 +20,6 @@ export async function getUsers(req,res){
         res.status(200).send(users.rows);
     }
     catch(err){
-        console.log("Erro ao buscar usuários");
-        console.log(err);
         res.status(500).send("Erro no servidor");
     }
 }
