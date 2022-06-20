@@ -14,6 +14,7 @@ export default function findHashtag(message){
     }
     console.log(hashtags)
     if(hashtags.length > 0){
+        console.log(hashtags)
         return hashtags
     }
     return ""

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import connection from "../config/db.js";
+
 export default async function tokenValidator(req, res, next) {
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer ", "").trim();
