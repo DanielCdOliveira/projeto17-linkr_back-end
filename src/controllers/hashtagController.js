@@ -35,3 +35,43 @@ export async function deleteHashtag(req,res) {
         return res.status(422).send("Não foi possível deletar o post!")
     }
 }
+
+export async function updateHashtag(req, res,next) {
+    const { message, postId  } = req.body
+    try {
+        const newHashtags = findHashtag(message)
+        const oldPost = await postRepository.getPostsById(postId)
+        const oldHashtags = findHashtag(oldPost[0].message)
+        if(newHashtags == undefined){
+            for(let oldHashtag of oldHashtags){
+                await hashtagsRepository.deleteHashtag(oldHashtag)
+            }
+        }
+        if(oldHashtags != undefined){
+            for(let oldHashtag of oldHashtags){
+                const verification = await hashtagsRepository.verificateHashtag(oldHashtag)
+                if(verification.rowCount > 0) {
+                    let infos = verification.rows[0]
+                    if(infos.ranking > 1){
+                        await hashtagsRepository.updateRanking(oldHashtag)
+                    } else {
+                        await hashtagsRepository.deleteHashtag(oldHashtag)
+                    }
+                }
+            } 
+        }
+        if(newHashtags != undefined){
+            for(let newHashtag of newHashtags){
+                const verification = await hashtagsRepository.verificateHashtag(newHashtag)
+                if(verification.rowCount > 0) {
+                    await hashtagsRepository.updateHashtag(newHashtag)
+                } else {
+                    await hashtagsRepository.insertHashtag(newHashtag)
+                }    
+            }
+        }
+        return res.sendStatus(204);
+    } catch (err) {
+        return res.status(422).send("Não foi possível deletar a hashtag")
+    }
+}
