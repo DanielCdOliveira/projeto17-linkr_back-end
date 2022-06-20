@@ -42,7 +42,6 @@ export async function likePost(req, res) {
         return res.status(200).send("Liked the post!");
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to like the post!")
     }
 }
@@ -56,7 +55,6 @@ export async function deslikePost(req, res) {
         return res.status(200).send("Dislike the post!");
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to dislike the post!")
     }
 }
@@ -67,7 +65,6 @@ export async function getLikes(req, res) {
         return res.status(200).send(likes.rows);
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to get likes!")
     }
 }
@@ -80,7 +77,6 @@ export async function getLikesById(req, res) {
         return res.status(200).send(likes.rows);
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to get likes!")
     }
 }
@@ -98,7 +94,6 @@ export async function countLikes(req, res) {
         }
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to get likes count!")
     }
 }
@@ -112,7 +107,6 @@ export async function deletePost(req, res) {
         await postRepository.deletePost(userId, id);
         return res.sendStatus(204);
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to delete the post!")
     }
 }
@@ -127,7 +121,6 @@ export async function editPost(req, res) {
         return res.status(200).send(postEdited.rows[0].message);
     
     } catch (e) {
-        console.log(e);
         return res.status(422).send("Unable to edit the post!")
     }
 }
