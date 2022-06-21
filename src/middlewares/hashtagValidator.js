@@ -1,6 +1,5 @@
 import postRepository from "../repositories/postRepository.js"
 import hashtagSchema from "../schemas/hashtagSchema.js";
-import hashtagUpSchema from "../schemas/hashtagUpdateSchema.js";
 
 export default function hashtagValidator(req, res, next){
     const { message } = req.body;
@@ -24,17 +23,11 @@ export default function hashtagValidator(req, res, next){
 export async function updateHashtagMiddleware(req, res, next) {
     const { postId } = req.body
     try {
-        const validation = hashtagUpSchema.validate(req.body)
-        if(validation.error){
-            res.status(422).send("Erro no body")
-            return
-        }
         const idValidation = await postRepository.getPostsById(postId)
         if(idValidation.rowCount == 0) {
             res.status(404).send("O post não existe")
             return
         }
-
         next()
 
     } catch (err) {

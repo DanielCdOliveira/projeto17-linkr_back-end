@@ -23,55 +23,45 @@ export async function getPostsByHashtag(req, res) {
 
 export async function deleteHashtag(req,res) {
     const { id } = req.params
-
     try {
-        const post = await postRepository.getPostsById(id)
+        const post = (await postRepository.getPostsById(id))
         const hashtags = findHashtag(post.rows[0].message)
         if(hashtags !== ""){
-            await postRepository.deleteHashtag(hashtags)
+            for(let hashtag of hashtags){
+                const hashtagInfos = (await hashtagsRepository.verificateHashtag(hashtag)).rows
+                await hashtagsRepository.deleteHashtag(hashtagInfos[0].id)
+            }
         }
         return res.sendStatus(204);
     } catch (err) {
-        return res.status(422).send("Não foi possível deletar o post!")
+        console.log(err)
+        return res.status(422).send("Não foi possível deletar a hashtag!")
     }
 }
 
 export async function updateHashtag(req, res) {
     const { message, postId  } = req.body
     try {
-        const newHashtags = findHashtag(message)
-        const oldPost = await postRepository.getPostsById(postId)
-        const oldHashtags = findHashtag(oldPost.rows[0].message)
-        if(newHashtags == undefined){
-            for(let oldHashtag of oldHashtags){
-                await hashtagsRepository.deleteHashtag(oldHashtag)
+        const post = (await postRepository.getPostsById(postId))
+        const oldHashtags = findHashtag(post.rows[0].message)
+        if(oldHashtags !== ""){
+            for(let hashtag of oldHashtags){
+                let hashtagInfos = (await hashtagsRepository.verificateHashtag(hashtag)).rows
+                await hashtagsRepository.deleteHashtag(hashtagInfos[0].id)
             }
         }
-        if(oldHashtags != undefined){
-            for(let oldHashtag of oldHashtags){
-                const verification = await hashtagsRepository.verificateHashtag(oldHashtag)
-                if(verification.rowCount > 0) {
-                    let infos = verification.rows[0]
-                    if(infos.ranking > 1){
-                        await hashtagsRepository.updateRanking(oldHashtag)
-                    } else {
-                        await hashtagsRepository.deleteHashtag(oldHashtag)
-                    }
-                }
-            } 
+        if(message == ""){
+            return res.sendStatus(204);
         }
-        if(newHashtags != undefined){
-            for(let newHashtag of newHashtags){
-                const verification = await hashtagsRepository.verificateHashtag(newHashtag)
-                if(verification.rowCount > 0) {
-                    await hashtagsRepository.updateHashtag(newHashtag)
-                } else {
-                    await hashtagsRepository.insertHashtag(newHashtag)
-                }    
+        const newHashtags = findHashtag(message)
+        if(newHashtags !== ""){
+            for(let hashtag of newHashtags){
+                await hashtagsRepository.insertHashtag(hashtag)
             }
         }
         return res.sendStatus(204);
     } catch (err) {
+        console.log(err)
         return res.status(422).send("Não foi possível deletar a hashtag")
     }
 }
