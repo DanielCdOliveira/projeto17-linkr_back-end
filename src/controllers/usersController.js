@@ -10,7 +10,6 @@ export async function getUser(req,res){
     }
     catch(err){
         console.log("Erro ao buscar usuário");
-        console.log(err);
         res.status(500).send(err);
     }
 }
@@ -35,4 +34,25 @@ export async function follow(req,res){
         return res.send(err);
       }
 
+}
+
+export async function unfollow(req,res){
+    const followerId = res.locals.userId;
+    const { followedId } = req.params;
+
+    if (Number(followerId) < 1 || Number(followedId) < 1) {
+      return res.sendStatus(404);
+    }
+    if (Number(followerId) === Number(followedId)) {
+      return res.status(409).send("Can't unfollow yourself");
+    }
+    try{
+        const result = await usersRepository.unfollow(followerId,followedId)
+        if (result.command !== "DELETE") {
+          return res.sendStatus(409);
+        }
+        res.sendStatus(204)
+    }catch(err){
+      res.send(err)
+    }
 }
