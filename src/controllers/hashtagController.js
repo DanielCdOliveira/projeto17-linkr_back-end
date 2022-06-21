@@ -44,6 +44,7 @@ export async function updateHashtag(req, res) {
     try {
         const post = (await postRepository.getPostsById(postId))
         const oldHashtags = findHashtag(post.rows[0].message)
+
         if(oldHashtags !== ""){
             for(let hashtag of oldHashtags){
                 let hashtagInfos = (await hashtagsRepository.verificateHashtag(hashtag)).rows

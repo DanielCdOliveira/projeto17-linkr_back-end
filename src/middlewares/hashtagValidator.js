@@ -6,10 +6,9 @@ export default function hashtagValidator(req, res, next){
     let messageArray = message.split(" ")
     let hashtags = []
     for(let hashtag of messageArray){
-        if(hashtag.includes("#")){
+        if(hashtag.includes("#") && hashtag[0] == "#"){
             let word = hashtag.replace('#',"")
-            let validation = hashtagSchema.validate({hashtag: word})
-            if(!validation.error && word != undefined){
+            if(word.length > 0){
                 hashtags.push(word)
             }
         }

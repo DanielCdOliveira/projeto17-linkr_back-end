@@ -1,7 +1,6 @@
 import connection from "../config/db.js"
 
 async function verificateHashtag(hashtag) {
-    console.log(hashtag)
     return connection.query(`
         SELECT 
             * 
