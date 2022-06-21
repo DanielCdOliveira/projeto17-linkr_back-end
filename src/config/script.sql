@@ -42,3 +42,9 @@ CREATE TABLE sessions(
 	"userId" integer NOT NULL REFERENCES "users"("id"),
 	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
+create table users_follow(
+    "id" serial primary key,
+    "followerId" integer not null references users("id"),
+    "followedId" integer not null references users("id"),
+    "followDate" date not null default now()
+)
