@@ -26,7 +26,7 @@ export async function deleteHashtag(req,res) {
 
     try {
         const post = await postRepository.getPostsById(id)
-        const hashtags = findHashtag(post[0].message)
+        const hashtags = findHashtag(post.rows[0].message)
         if(hashtags !== ""){
             await postRepository.deleteHashtag(hashtags)
         }
@@ -36,12 +36,12 @@ export async function deleteHashtag(req,res) {
     }
 }
 
-export async function updateHashtag(req, res,next) {
+export async function updateHashtag(req, res) {
     const { message, postId  } = req.body
     try {
         const newHashtags = findHashtag(message)
         const oldPost = await postRepository.getPostsById(postId)
-        const oldHashtags = findHashtag(oldPost[0].message)
+        const oldHashtags = findHashtag(oldPost.rows[0].message)
         if(newHashtags == undefined){
             for(let oldHashtag of oldHashtags){
                 await hashtagsRepository.deleteHashtag(oldHashtag)

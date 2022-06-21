@@ -30,13 +30,14 @@ export async function updateHashtagMiddleware(req, res, next) {
             return
         }
         const idValidation = await postRepository.getPostsById(postId)
-        console.log(idValidation)
         if(idValidation.rowCount == 0) {
             res.status(404).send("O post não existe")
             return
         }
+
+        next()
+
     } catch (err) {
         res.status(500).send("Erro no servidor " + err);
     }
-    next()
 }

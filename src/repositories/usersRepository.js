@@ -2,7 +2,7 @@ import connection from "../config/db.js";
 
 async function findUser(name, id){
 
-    const nameClause = name? `users.name ILIKE ${name}` : ``;
+    const nameClause = name? `users.name ILIKE '${name}%'` : ``;
     const idClause = id ? `users.id = ${id}` : ``;
 
     return(
