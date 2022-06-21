@@ -155,14 +155,14 @@ async function getPostsByParams(hashtag) {
 }
 
 async function getPostsById(id) {
-  return (await connection.query(`
+    return connection.query(`
     SELECT 
       * 
     FROM 
       posts 
     WHERE 
-      id = ($1)
-  `,[id])).rows
+      id = $1
+  `,[id])
 }
 
 async function deleteHashtag(hashtags) {
