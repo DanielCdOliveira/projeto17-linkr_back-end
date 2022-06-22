@@ -17,17 +17,11 @@ export async function publishPost(req,res){
                 const result = await postRepository.createLink(metadatas)
                 await postRepository.createPost(userId, url, message, result);
                 if(hashtags !== undefined){
-                for(let hashtag of hashtags){
-                    let verification = await hashtagsRepository.verificateHashtag(hashtag)
-                    if(verification.rowCount > 0){
-                        await hashtagsRepository.updateHashtag(hashtag)
-                    } else {
+                    for(let hashtag of hashtags){
                         await hashtagsRepository.insertHashtag(hashtag)
                     }
                 }
-            }
                 res.sendStatus(201)
-        
         }catch(err){
             res.send(err)
         }
@@ -129,9 +123,9 @@ export async function editPost(req, res) {
 export async function getPosts(req,res){
     const { limit, offset, userId } = req.query;
         try{
-                const result = await postRepository.getPosts(limit, offset, userId)
-                res.send(result.rows)
+            const result = await postRepository.getPosts(limit, offset, userId)
+            res.send(result.rows)
         }catch(err){
-                res.send(err)
+            res.send(err)
         }
 }
