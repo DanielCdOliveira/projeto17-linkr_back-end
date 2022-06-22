@@ -83,9 +83,9 @@ async function countLikes(id) {
 }
 async function countShares(id) {
   return connection.query(`
-      SELECT COUNT(shares."postId")
+      SELECT COUNT(shares."originalPostId")
       FROM shares
-      WHERE shares."postId" = $1`,
+      WHERE shares."originalPostId" = $1`,
       [id])
 }
 
@@ -125,7 +125,7 @@ async function getPosts(limit, offset, userId){
 
   
   return connection.query(
-    `SELECT posts.id as postId,posts.message, posts."userId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
+    `SELECT posts.id as postId,posts.message, posts."userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
     join link
       on posts."linkId" = link.id
     join users 
@@ -217,12 +217,15 @@ async function createRePost(userIdRepost,infoPost) {
 console.log(infoPost);
 console.log(userIdRepost);
 const{userId, message,linkId,id} = infoPost
+  const repostId = (await connection.query(`
+  INSERT INTO posts
+  ("userId","userIdRepost","message","linkId","originalPostId") 
+  values ($1, $2, $3, $4, $5)
+  RETURNING id;
+  `,[userId,userIdRepost,message,linkId,id])).rows[0].id
   await connection.query(`
-  INSERT INTO posts("userId","userIdRepost","message","linkId") values($1, $2, $3, $4)
-  `,[userId,userIdRepost,message,linkId])
-  await connection.query(`
-  INSERT INTO shares("userId","postId") values($1, $2)
-  `,[userIdRepost, id])
+  INSERT INTO shares("userId","originalPostId","repostId") values($1, $2,$3)
+  `,[userIdRepost, id,repostId])
 }
 
 const postRepository = {

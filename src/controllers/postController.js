@@ -65,9 +65,10 @@ export async function getLikes(req, res) {
 
 export async function getLikesById(req, res) {
     const { id } = req.params;
-
+    console.log(id);
     try {
         const likes = await postRepository.getLikesById(id);
+        console.log("likes",likes);
         return res.status(200).send(likes.rows);
     
     } catch (e) {
@@ -148,8 +149,7 @@ export async function countShares(req, res) {
 export async function sharePost(req, res) {
     const { userId } = res.locals;
     const  postId  = req.params.id;
-    console.log(userId);
-    console.log(postId);
+
     try {
         const infoPost = await postRepository.getPostInfo(postId);
         await postRepository.createRePost(userId,infoPost)
