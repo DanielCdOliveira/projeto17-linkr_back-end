@@ -1,7 +1,7 @@
 import connection from "../config/db.js"
 
 async function verificateHashtag(hashtag) {
-    let verification = connection.query(`
+    return connection.query(`
         SELECT 
             * 
         FROM 
@@ -9,7 +9,6 @@ async function verificateHashtag(hashtag) {
         WHERE 
             "name" = ($1)
     `, [hashtag])
-    return verification
 }
 
 
@@ -35,24 +34,26 @@ async function insertHashtag(hashtag) {
 
 async function hashtagList() {
     return connection.query(`
-        SELECT 
-            *
-        FROM 
-            hashtags
-        ORDER BY
-            ranking DESC
-        LIMIT 
-            10
+    SELECT 
+        name, SUM(ranking) as ranking 
+    FROM 
+        hashtags
+    GROUP BY
+        name
+    ORDER BY
+        SUM(ranking) DESC
+    LIMIT 
+        10
     `)
 }
 
-async function deleteHashtag(hashtag) {
+async function deleteHashtag(id) {
     return connection.query(`
         DELETE FROM 
             hashtags
         WHERE
-            name = ($1)
-    `, [hashtag])
+            id = ($1)
+    `, [id])
 }
 
 async function updateRanking(hashtag) {
