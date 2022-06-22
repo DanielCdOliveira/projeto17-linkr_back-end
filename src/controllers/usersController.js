@@ -11,7 +11,6 @@ export async function getUser(req,res){
         res.status(200).send({user:users.rows,following:following.rowCount});
     }
     catch(err){
-        console.log("Erro ao buscar usuário");
         res.status(500).send(err);
     }
 }
