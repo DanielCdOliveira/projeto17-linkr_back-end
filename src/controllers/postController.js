@@ -99,6 +99,7 @@ export async function deletePost(req, res) {
 
     try {
         await postRepository.deleteLikes(id);
+        await postRepository.deleteComments(id);
         await postRepository.deletePost(userId, id);
         return res.sendStatus(204);
     } catch (e) {
@@ -122,6 +123,7 @@ export async function editPost(req, res) {
 
 export async function getPosts(req,res){
     const { limit, offset, userId } = req.query;
+    console.log("userid",userId)
         try{
             const result = await postRepository.getPosts(limit, offset, userId)
             res.send(result.rows)
