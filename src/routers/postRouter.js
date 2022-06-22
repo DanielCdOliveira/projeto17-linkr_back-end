@@ -13,6 +13,7 @@ postRouter.post("/like/post/:id", tokenValidator, likePost);
 postRouter.delete("/deslike/post/:id",tokenValidator, deslikePost)
 postRouter.get("/get/likes", getLikes)
 postRouter.get("/get/likes/:id", getLikesById)
+postRouter.get("/countlikes/post/:id", countLikes);
 postRouter.get("/countShares/post/:id", countShares)
 postRouter.post("/share/post/:id",tokenValidator,sharePost)
 postRouter.delete("/delete/post/:id",tokenValidator, deletePost)
