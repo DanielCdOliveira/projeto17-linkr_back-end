@@ -18,6 +18,8 @@ create table users(
 create table posts(
     "id" serial primary key,
     "userId" integer not null references "users"("id"),
+    "userIdRepost" integer references "users"("id"),
+    "originalPostId" integer references "posts"("id"),
     "message" text not null,
     "linkId" integer not null references "link"("id"),
     "createdAt" date not null default now()
@@ -28,6 +30,14 @@ create table likes(
     "userId" integer not null references "users"("id"),
     "postId" integer not null references "posts"("id"),
     "likeTime" date not null default now()
+);
+
+create table shares(
+    "id" serial primary key,
+    "userId" integer not null references "users"("id"),
+    "originalPostId" integer not null references "posts"("id"),
+    "repostId" integer not null references "posts"("id"),
+    "shareTime" date not null default now()
 );
 
 create table hashtags(
