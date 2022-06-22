@@ -1,12 +1,14 @@
 import usersRepository from "../repositories/usersRepository.js";
 
 export async function getUser(req,res){
-    const {name, id} = req.query
+    const {name, followedId} = req.query
+    const followerId = res.locals.userId;
 
     try{
-        const users = await usersRepository.findUser(name, id);
-
-        res.status(200).send(users.rows);
+        const following = await usersRepository.getUserFollow(followerId,followedId); 
+        const users = await usersRepository.findUser(name, followedId);
+      
+        res.status(200).send({user:users.rows,following:following.rowCount});
     }
     catch(err){
         console.log("Erro ao buscar usuário");
@@ -55,4 +57,13 @@ export async function unfollow(req,res){
     }catch(err){
       res.send(err)
     }
+}
+
+export async function getUserFollow(req,res){
+  const { followedId } = req.params;
+  try{
+    
+  }catch(err){
+    return res.send(err)
+  }
 }
