@@ -30,6 +30,13 @@ create table likes(
     "likeTime" date not null default now()
 );
 
+create table shares(
+    "id" serial primary key,
+    "userId" integer not null references "users"("id"),
+    "postId" integer not null references "posts"("id"),
+    "shareTime" date not null default now()
+);
+
 create table hashtags(
     "id" serial primary key,
     "name" text not null,

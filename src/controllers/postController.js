@@ -128,3 +128,33 @@ export async function getPosts(req,res){
             res.send(err)
         }
 }
+
+export async function countShares(req, res) {
+    const { id } = req.params;
+
+    try {
+        const sharesInfo = await postRepository.countShares(id);
+
+        if(sharesInfo.rows.length == 0){
+            return res.status(200).send(`${sharesInfo.rows.length}`);
+        } else {
+            return res.status(200).send(sharesInfo.rows[0].count);
+        }
+    
+    } catch (e) {
+        return res.status(422).send("Unable to get shares count!")
+    }
+}
+export async function sharePost(req, res) {
+    const { userId } = res.locals;
+    const  postId  = req.params.id;
+    console.log(userId);
+    console.log(postId);
+    try {
+        const infoPost = await postRepository.getPostInfo(postId);
+        await postRepository.createRePost(userId,infoPost)
+        
+    } catch (e) {
+        return res.status(422).send("Unable to share the post!")
+    }
+}

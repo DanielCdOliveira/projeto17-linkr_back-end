@@ -81,6 +81,13 @@ async function countLikes(id) {
         WHERE likes."postId" = $1`,
         [id])
 }
+async function countShares(id) {
+  return connection.query(`
+      SELECT COUNT(shares."postId")
+      FROM shares
+      WHERE shares."postId" = $1`,
+      [id])
+}
 
 async function deletePost(userId, id) {
     return connection.query(`
@@ -197,6 +204,26 @@ async function deleteHashtag(hashtags) {
   }
   return answer
 }
+async function getPostInfo(postId) {
+
+  const postInfo = (await connection.query(`
+    SELECT * 
+    FROM posts
+    WHERE posts.id = $1
+    `,[postId])).rows[0]
+  return postInfo;
+}
+async function createRePost(userIdRepost,infoPost) {
+console.log(infoPost);
+console.log(userIdRepost);
+const{userId, message,linkId,id} = infoPost
+  await connection.query(`
+  INSERT INTO posts("userId","userIdRepost","message","linkId") values($1, $2, $3, $4)
+  `,[userId,userIdRepost,message,linkId])
+  await connection.query(`
+  INSERT INTO shares("userId","postId") values($1, $2)
+  `,[userIdRepost, id])
+}
 
 const postRepository = {
   createPost,
@@ -213,7 +240,10 @@ const postRepository = {
   deleteLikes,
   getLikesById,
   getPostsById,
-  deleteHashtag
+  deleteHashtag,
+  countShares,
+  getPostInfo,
+  createRePost
 };
 
 export default postRepository
