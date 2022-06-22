@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import connection from "../config/db.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import authRepository from "../repositories/authRepository.js";

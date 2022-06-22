@@ -122,6 +122,7 @@ export async function editPost(req, res) {
 
 export async function getPosts(req,res){
     const { limit, offset, userId } = req.query;
+    console.log("userid",userId)
         try{
             const result = await postRepository.getPosts(limit, offset, userId)
             res.send(result.rows)
