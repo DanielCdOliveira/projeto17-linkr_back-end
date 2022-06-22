@@ -9,7 +9,7 @@ export async function signUp(req, res) {
   try {
     const SALT = 10;
     const passwordHash = bcrypt.hashSync(user.password, SALT);
-    await authRepository.login(user.name, user.email, passwordHash, user.image);
+    await authRepository.registerUser(user.name, user.email, passwordHash, user.image);
     return res.sendStatus(201);
   } catch (error) {
     if (error.code === "23505") return res.status(409).send(error.detail);
