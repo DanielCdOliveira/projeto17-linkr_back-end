@@ -96,6 +96,13 @@ async function deleteLikes(id) {
   , [id]);
 }
 
+async function deleteComments(id) {
+  return connection.query(
+   `DELETE FROM comments
+    WHERE comments."postId" = $1`
+  , [id]);
+}
+
 async function editPost(userId, postId, message) {
     return connection.query(`
         update posts
@@ -213,7 +220,8 @@ const postRepository = {
   deleteLikes,
   getLikesById,
   getPostsById,
-  deleteHashtag
+  deleteHashtag,
+  deleteComments
 };
 
 export default postRepository
