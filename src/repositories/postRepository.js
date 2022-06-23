@@ -124,25 +124,52 @@ async function getEditedPost(postId) {
   WHERE id = $1`, [postId]);
 }
 
-async function getPosts(limit, offset, userId){
+async function getPosts(limit, offset, userId, followerId){
 
   const offsetClause = offset ? `OFFSET ${offset}` : "";
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
   const userIdClause = userId ? `WHERE posts."userId" = ${userId}` : ``;
+  if(userId){
+    return connection.query(
+      `SELECT posts.id as postId,posts.message, posts."userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
+      join link
+        on posts."linkId" = link.id
+      join users 
+        on posts."userId" = users.id
+        ${userIdClause}
+        order by posts.id desc
+        ${offsetClause}
+        ${limitClause}
+      `
+    )
+  } else{
+
+    const followingSomeone = await connection.query(
+      `SELECT 
+            * 
+        from 
+            users 
+                join users_follow as uf 
+                    on users.id = uf."followerId"
+    `)
+    if(followingSomeone.rowCount === 0){
+      return false
+    }
+
+    return connection.query(
+      `SELECT posts.id as postId,posts.message, uf."followedId" as "userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
+      join link
+        on posts."linkId" = link.id
+      join users_follow as uf
+        on uf."followerId" = posts."userId"
+      join users 
+        on uf."followedId" = users.id
+      where users.id != $1`,
+      [followerId]
+    );
+  }
 
   
-  return connection.query(
-    `SELECT posts.id as postId,posts.message, posts."userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
-    join link
-      on posts."linkId" = link.id
-    join users 
-      on posts."userId" = users.id
-      ${userIdClause}
-      order by posts.id desc
-      ${offsetClause}
-      ${limitClause}
-    `
-  );
 }
 
 async function getPostsByParams(hashtag) {
@@ -221,8 +248,6 @@ async function getPostInfo(postId) {
   return postInfo;
 }
 async function createRePost(userIdRepost,infoPost) {
-console.log(infoPost);
-console.log(userIdRepost);
 const{userId, message,linkId,id} = infoPost
   const repostId = (await connection.query(`
   INSERT INTO posts
