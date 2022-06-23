@@ -18,7 +18,7 @@ create table users(
 create table posts(
     "id" serial primary key,
     "userId" integer not null references "users"("id"),
-    "userIdRepost" integer references "users"("id"),
+    "originalUserId" integer references "users"("id"),
     "originalPostId" integer references "posts"("id"),
     "message" text not null,
     "linkId" integer not null references "link"("id"),

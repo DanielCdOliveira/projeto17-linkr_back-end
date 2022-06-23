@@ -131,7 +131,7 @@ async function getPosts(limit, offset, userId, followerId){
   const userIdClause = userId ? `WHERE posts."userId" = ${Number(userId)}` : ``;
   if(userId){
     return connection.query(
-      `SELECT posts.id as postId,posts.message, posts."userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
+      `SELECT posts.id as postId,posts.message, posts."userId",posts."originalUserId", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
       join link
         on posts."linkId" = link.id
       join users 
@@ -157,7 +157,7 @@ async function getPosts(limit, offset, userId, followerId){
     }
 
     return connection.query(
-      `SELECT posts.id as postId,posts.message, posts."userId" ,posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
+      `SELECT posts.id as postId,posts.message, posts."userId" ,posts."originalUserId", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
       join link
         on posts."linkId" = link.id
       join users_follow as uf
@@ -251,7 +251,7 @@ async function createRePost(userIdRepost,infoPost) {
 const{userId, message,linkId,id} = infoPost
   const repostId = (await connection.query(`
   INSERT INTO posts
-  ("userId","userIdRepost","message","linkId","originalPostId") 
+  ("originalUserId","userId","message","linkId","originalPostId") 
   values ($1, $2, $3, $4, $5)
   RETURNING id;
   `,[userId,userIdRepost,message,linkId,id])).rows[0].id
@@ -259,7 +259,23 @@ const{userId, message,linkId,id} = infoPost
   INSERT INTO shares("userId","originalPostId","repostId") values($1, $2,$3)
   `,[userIdRepost, id,repostId])
 }
-
+async function getName(userIdRepost) {
+    const name = (await connection.query(`
+      SELECT name
+      FROM users
+      WHERE id = $1
+    `,[userIdRepost])).rows[0].name
+  return name
+}
+async function getUser(userIdRepost) {
+  const user = (await connection.query(`
+    SELECT *
+    FROM users
+    WHERE id = $1
+  `,[userIdRepost])).rows[0]
+  console.log("name",user);
+return user
+}
 const postRepository = {
   createPost,
   likePost,
@@ -279,7 +295,9 @@ const postRepository = {
   countShares,
   getPostInfo,
   createRePost,
-  deleteComments
+  deleteComments,
+  getName,
+  getUser
 };
 
 export default postRepository
