@@ -34,7 +34,6 @@ export async function deleteHashtag(req,res) {
         }
         return res.sendStatus(204);
     } catch (err) {
-        console.log(err)
         return res.status(422).send("Não foi possível deletar a hashtag!")
     }
 }
@@ -62,7 +61,6 @@ export async function updateHashtag(req, res) {
         }
         return res.sendStatus(204);
     } catch (err) {
-        console.log(err)
         return res.status(422).send("Não foi possível deletar a hashtag")
     }
 }

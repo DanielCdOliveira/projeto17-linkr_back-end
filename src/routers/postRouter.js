@@ -18,6 +18,6 @@ postRouter.get("/countShares/post/:id", countShares)
 postRouter.post("/share/post/:id",tokenValidator,sharePost)
 postRouter.delete("/delete/post/:id",tokenValidator, deletePost)
 postRouter.post("/edit/post",tokenValidator, editPost)
-postRouter.get("/get/posts", getPosts)
+postRouter.get("/get/posts", tokenValidator, getPosts);
 
 export default postRouter;
