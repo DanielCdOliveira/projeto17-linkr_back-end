@@ -128,7 +128,7 @@ async function getPosts(limit, offset, userId, followerId){
 
   const offsetClause = offset ? `OFFSET ${offset}` : "";
   const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
-  const userIdClause = userId ? `WHERE posts."userId" = ${userId}` : ``;
+  const userIdClause = userId ? `WHERE posts."userId" = ${Number(userId)}` : ``;
   if(userId){
     return connection.query(
       `SELECT posts.id as postId,posts.message, posts."userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage"FROM posts
@@ -157,14 +157,14 @@ async function getPosts(limit, offset, userId, followerId){
     }
 
     return connection.query(
-      `SELECT posts.id as postId,posts.message, uf."followedId" as "userId",posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
+      `SELECT posts.id as postId,posts.message, posts."userId" ,posts."userIdRepost", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
       join link
         on posts."linkId" = link.id
       join users_follow as uf
-        on uf."followerId" = posts."userId"
+        on uf."followedId" = posts."userId"
       join users 
         on uf."followedId" = users.id
-      where users.id != $1`,
+      where uf."followerId" = $1`,
       [followerId]
     );
   }

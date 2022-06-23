@@ -41,8 +41,8 @@ async function follow(follower,followed){
             users 
                 join users_follow as uf 
                     on users.id = uf."followerId"
-        where uf."followedId" = $1 `,
-      [followed]
+        where uf."followedId" = $1 and uf."followerId" = $2`,
+      [followed,follower]
     );
     if(validateFollowerAlreadyFollow.rowCount !== 0){
         return validateFollowerAlreadyFollow
@@ -113,8 +113,8 @@ async function getUserFollow(follower,followed){
             users 
                 join users_follow as uf 
                     on users.id = uf."followerId"
-        where uf."followedId" = $1 `,
-    [followed]
+        where uf."followerId" = $1 and uf."followedId" = $2 `,
+    [follower,followed]
   );
 }
 

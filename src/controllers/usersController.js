@@ -7,7 +7,6 @@ export async function getUser(req,res){
     try{
         const following = await usersRepository.getUserFollow(followerId,followedId); 
         const users = await usersRepository.findUser(name, followedId);
-      
         res.status(200).send({user:users.rows,following:following.rowCount});
     }
     catch(err){
@@ -56,13 +55,4 @@ export async function unfollow(req,res){
     }catch(err){
       res.send(err)
     }
-}
-
-export async function getUserFollow(req,res){
-  const { followedId } = req.params;
-  try{
-    
-  }catch(err){
-    return res.send(err)
-  }
 }
