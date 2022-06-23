@@ -163,7 +163,7 @@ export async function sharePost(req, res) {
     try {
         const infoPost = await postRepository.getPostInfo(postId);
         await postRepository.createRePost(userId,infoPost)
-
+        return res.sendStatus(201)
     } catch (e) {
         return res.status(422).send("Unable to share the post!")
     }
