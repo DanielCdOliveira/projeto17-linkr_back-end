@@ -168,3 +168,22 @@ export async function sharePost(req, res) {
         return res.status(422).send("Unable to share the post!")
     }
 }
+export async function getRepostName(req, res) {
+    const  repostUserId  = req.params.id;
+    try {
+        const name = await postRepository.getName(repostUserId);
+        res.status(200).send(name)
+    } catch (e) {
+        return res.status(422).send("Unable to get the re-post name!")
+    }
+}
+export async function getUser(req, res) {
+    const  originalUserId  = req.params.id;
+    console.log(originalUserId);
+    try {
+        const name = await postRepository.getUser(originalUserId);
+        res.status(200).send(name)
+    } catch (e) {
+        return res.status(422).send("Unable to get the re-post name!")
+    }
+}
