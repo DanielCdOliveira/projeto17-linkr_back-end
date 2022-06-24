@@ -125,9 +125,8 @@ async function getEditedPost(postId) {
 }
 
 async function getPosts(limit, offset, userId, followerId){
-
   const offsetClause = offset ? `OFFSET ${offset}` : "";
-  const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 20`;
+  const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 10`;
   const userIdClause = userId ? `WHERE posts."userId" = ${Number(userId)}` : ``;
   if(userId){
     return connection.query(
@@ -164,7 +163,10 @@ async function getPosts(limit, offset, userId, followerId){
         on uf."followedId" = posts."userId"
       join users 
         on uf."followedId" = users.id
-      where uf."followerId" = $1`,
+      where uf."followerId" = $1
+      order by posts.id desc
+        ${offsetClause}
+        ${limitClause}`,
       [followerId]
     );
   }
@@ -276,6 +278,26 @@ async function getUser(userIdRepost) {
   console.log("name",user);
 return user
 }
+async function hasMorePage(userId,offset){
+  const offsetClause = offset ? `OFFSET ${offset}` : "";
+  
+
+  console.log("puts")
+  return connection.query(
+    `SELECT posts.id as postId,posts.message, posts."userId" ,posts."originalUserId", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
+      join link
+        on posts."linkId" = link.id
+      join users_follow as uf
+        on uf."followedId" = posts."userId"
+      join users 
+        on uf."followedId" = users.id
+      where uf."followerId" = $1
+      order by posts.id desc
+        ${offsetClause}
+        LIMIT 5`,
+    [userId]
+  );
+}
 const postRepository = {
   createPost,
   likePost,
@@ -297,7 +319,8 @@ const postRepository = {
   createRePost,
   deleteComments,
   getName,
-  getUser
+  getUser,
+  hasMorePage,
 };
 
 export default postRepository
