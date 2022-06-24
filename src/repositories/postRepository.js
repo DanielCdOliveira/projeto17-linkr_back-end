@@ -279,9 +279,7 @@ return user
 }
 async function hasMorePage(userId,offset){
   const offsetClause = offset ? `OFFSET ${offset}` : "";
-  
 
-  console.log("puts")
   return connection.query(
     `SELECT posts.id as postId,posts.message, posts."userId" ,posts."originalUserId", posts."originalPostId", link.*,  users.name as "userName", users.image as "userImage" FROM posts
       join link
@@ -315,11 +313,13 @@ async function deleteShares(id) {
     `SELECT posts."originalPostId" as id from posts join shares on posts."originalPostId" = shares."originalPostId" where posts."originalPostId" = $1`,[id]
   );
 
+  if(result.rowCount === 0){
+    return
+  }
   await connection.query(`
    DELETE FROM shares
     WHERE shares."originalPostId" = $1`
   , [id]);
-
   return connection.query(
     `DELETE FROM posts where posts."originalPostId" = $1`,[result.rows[0].id]
   )

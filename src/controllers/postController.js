@@ -192,7 +192,6 @@ export async function hasMorePage(req,res){
 
     try{
         const result = await postRepository.hasMorePage(userId, offset)
-        console.log(result)
         result.rowCount > 0 ? res.send(true) : res.send(false)
     }catch(err){
         res.send(err)
