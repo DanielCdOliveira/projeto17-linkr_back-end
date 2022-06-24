@@ -273,7 +273,6 @@ async function getUser(userIdRepost) {
     FROM users
     WHERE id = $1
   `,[userIdRepost])).rows[0]
-  console.log("name",user);
 return user
 }
 const postRepository = {

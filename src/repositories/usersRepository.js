@@ -1,19 +1,42 @@
 import connection from "../config/db.js";
 
-async function findUser(name, id){
+async function findUser(name, followerId, id){
 
-    const nameClause = name? `users.name ILIKE '${name}%'` : ``;
+    const nameClause = name? `u.name ILIKE '${name}%'` : ``;
     const idClause = id ? `users.id = ${id}` : ``;
 
+    if(id){
+      return(
+        connection.query(
+          `
+          SELECT users.name AS name, users.id AS id, users.image AS image
+          FROM users
+          WHERE 
+          ${idClause}
+          `
+        )
+    )
+    }
+
     return(
-        await connection.query(
+        connection.query(
         `
-        SELECT users.name AS name, users.id AS id, users.image AS image
-        FROM users
-        WHERE 
-        ${nameClause}
-        ${idClause}
-        `
+        select 
+            u.name, u.image, u.id
+        from 
+            users as u
+            left join users_follow as uf
+                on u.id = uf."followedId"
+                and uf."followerId" = $1
+        where
+            u.id <> $2 and ${nameClause}
+        order by
+            case
+                when uf."followedId" is not null then 1
+                else 0
+            end desc,
+            u.name
+        `, [followerId, followerId]
         )
     )
 }
@@ -118,11 +141,19 @@ async function getUserFollow(follower,followed){
   );
 }
 
+async function getUserFollowed() {
+  return await connection.query(`
+  SELECT * 
+  FROM users_follow`
+  );
+}
+
 const usersRepository = {
   findUser,
   follow,
   unfollow,
-  getUserFollow
+  getUserFollow,
+  getUserFollowed
 };
 
 export default usersRepository
