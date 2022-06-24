@@ -178,7 +178,6 @@ export async function getRepostName(req, res) {
 }
 export async function getUser(req, res) {
     const  originalUserId  = req.params.id;
-    console.log(originalUserId);
     try {
         const name = await postRepository.getUser(originalUserId);
         res.status(200).send(name)
@@ -198,3 +197,4 @@ export async function hasMorePage(req,res){
         res.send(err)
     }
 }
+

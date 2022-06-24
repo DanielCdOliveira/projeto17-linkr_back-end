@@ -6,7 +6,7 @@ export async function getUser(req,res){
 
     try{
         const following = await usersRepository.getUserFollow(followerId,followedId); 
-        const users = await usersRepository.findUser(name, followedId);
+        const users = await usersRepository.findUser(name, followerId, followedId);
         res.status(200).send({user:users.rows,following:following.rowCount});
     }
     catch(err){
@@ -55,4 +55,13 @@ export async function unfollow(req,res){
     }catch(err){
       res.send(err)
     }
+}
+
+export async function getUserFollowed(req, res) {
+  try {
+      const userFollowed = await usersRepository.getUserFollowed();
+      res.status(200).send(userFollowed.rows)
+  } catch (e) {
+      return res.status(422).send("Unable to get the re-post name!")
+  }
 }
