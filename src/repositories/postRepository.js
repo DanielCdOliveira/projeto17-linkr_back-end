@@ -92,7 +92,7 @@ async function countShares(id) {
 async function deletePost(userId, id) {
     return connection.query(`
         DELETE from posts
-        WHERE "userId" = $1 AND "id" = $2`,
+        WHERE posts."userId" = $1 AND posts."id" = $2`,
         [userId, id]);
 }
 
@@ -298,6 +298,36 @@ async function hasMorePage(userId,offset){
     [userId]
   );
 }
+async function hasMorePosts(lastPost, followerId){
+  return connection.query(
+    `SELECT users.name FROM posts
+      join link
+        on posts."linkId" = link.id
+      join users_follow as uf
+        on uf."followedId" = posts."userId"
+      join users 
+        on uf."followedId" = users.id
+      where uf."followerId" = $1 and posts.id > $2`,[followerId,lastPost]
+  )
+}
+
+async function deleteShares(id) {
+  const result = await connection.query(
+    `SELECT posts."originalPostId" as id from posts join shares on posts."originalPostId" = shares."originalPostId" where posts."originalPostId" = $1`,[id]
+  );
+
+  await connection.query(`
+   DELETE FROM shares
+    WHERE shares."originalPostId" = $1`
+  , [id]);
+
+  return connection.query(
+    `DELETE FROM posts where posts."originalPostId" = $1`,[result.rows[0].id]
+  )
+  
+}
+
+
 const postRepository = {
   createPost,
   likePost,
@@ -321,6 +351,8 @@ const postRepository = {
   getName,
   getUser,
   hasMorePage,
+  hasMorePosts,
+  deleteShares,
 };
 
 export default postRepository

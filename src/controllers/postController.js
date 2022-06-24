@@ -99,6 +99,7 @@ export async function deletePost(req, res) {
     try {
         await postRepository.deleteLikes(id);
         await postRepository.deleteComments(id);
+        await postRepository.deleteShares(id)
         await postRepository.deletePost(userId, id);
         return res.sendStatus(204);
     } catch (e) {
@@ -194,6 +195,17 @@ export async function hasMorePage(req,res){
         const result = await postRepository.hasMorePage(userId, offset)
         console.log(result)
         result.rowCount > 0 ? res.send(true) : res.send(false)
+    }catch(err){
+        res.send(err)
+    }
+}
+
+export async function hasMorePosts(req,res){
+    const {id} = req.params
+    const {userId} = res.locals
+    try{
+        const result = await postRepository.hasMorePosts(id, userId);
+        res.status(200).send(`${result.rowCount}`)
     }catch(err){
         res.send(err)
     }
