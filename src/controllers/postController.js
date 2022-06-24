@@ -139,7 +139,6 @@ export async function getPosts(req,res){
             res.send(err)
         }
 }
-
 export async function countShares(req, res) {
     const { id } = req.params;
 
@@ -186,3 +185,16 @@ export async function getUser(req, res) {
         return res.status(422).send("Unable to get the re-post name!")
     }
 }
+export async function hasMorePage(req,res){
+    const{ offset } = req.query
+    const { userId }= res.locals
+
+    try{
+        const result = await postRepository.hasMorePage(userId, offset)
+        console.log(result)
+        result.rowCount > 0 ? res.send(true) : res.send(false)
+    }catch(err){
+        res.send(err)
+    }
+}
+
