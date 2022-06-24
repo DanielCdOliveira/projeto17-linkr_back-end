@@ -126,7 +126,7 @@ async function getEditedPost(postId) {
 
 async function getPosts(limit, offset, userId, followerId){
   const offsetClause = offset ? `OFFSET ${offset}` : "";
-  const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 5`;
+  const limitClause = limit ? `LIMIT ${limit}` : `LIMIT 10`;
   const userIdClause = userId ? `WHERE posts."userId" = ${Number(userId)}` : ``;
   if(userId){
     return connection.query(
