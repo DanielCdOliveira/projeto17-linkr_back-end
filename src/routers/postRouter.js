@@ -3,7 +3,7 @@ import { Router } from "express";
 import { validateSchema } from "../middlewares/schemaValidator.js"
 import postSchema from "../schemas/postSchema.js"
 import hashtagValidator from "../middlewares/hashtagValidator.js"
-import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, getPosts, getLikes, getLikesById, countShares,sharePost,getRepostName, getUser } from "../controllers/postController.js";
+import {publishPost, likePost, deslikePost, countLikes, deletePost, editPost, getPosts, getLikes, getLikesById, countShares,sharePost,getRepostName, getUser, hasMorePage } from "../controllers/postController.js";
 import tokenValidator from "../middlewares/tokenValidation.js";
 const postRouter = Router()
 
@@ -21,4 +21,5 @@ postRouter.post("/edit/post",tokenValidator, editPost)
 postRouter.get("/get/posts", tokenValidator, getPosts);
 postRouter.get("/reposts/:id", getRepostName);
 postRouter.get("/reposts-users/:id", getUser);
+postRouter.get("/check/posts", tokenValidator, hasMorePage);
 export default postRouter;
